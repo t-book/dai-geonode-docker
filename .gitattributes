@@ -1,0 +1,10 @@
+*.py filter=updateProjectName
+*.sh filter=updateProjectName
+*.md filter=updateProjectName
+*.rst filter=updateProjectName
+*.json filter=updateProjectName
+*.yml filter=updateProjectName
+*.ini filter=updateProjectName
+*.env filter=updateProjectName
+*.sample filter=updateProjectName
+*.properties filter=updateProjectName
