@@ -67,7 +67,7 @@ services:
     env_file:
       - .env
     environment:
-      UWSGI_CMD: uwsgi --ini /usr/src/{{project_name}}/uwsgi.ini
+      UWSGI_CMD: uwsgi --ini /usr/src/dai_geonode/uwsgi.ini
       IS_CELERY: 'False'
 
   celery:
