@@ -41,7 +41,7 @@ setup(
     ],
     license="GPL",
     keywords="{{project_name}} geonode django",
-    url='https://github.com/{{project_name}}/{{ project_name }}',
+    url='https://github.com/{{project_name}}/{{project_name}}',
     packages=find_packages(),
     dependency_links=[
         "git+https://github.com/GeoNode/geonode.git#egg=geonode"
