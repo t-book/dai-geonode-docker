@@ -1,3 +1,4 @@
+# Update Jinja marker
 *.py filter=updateProjectName
 *.sh filter=updateProjectName
 *.md filter=updateProjectName
