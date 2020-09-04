@@ -8,3 +8,4 @@
 *.env filter=updateProjectName
 *.sample filter=updateProjectName
 *.properties filter=updateProjectName
+Dockerfile filter=updateProjectName

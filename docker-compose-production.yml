@@ -1,0 +1,26 @@
+version: '2.2'
+services:
+
+  db:
+    env_file:
+        - .env_production
+
+  geoserver:
+    env_file:
+        - .env_production
+
+  django:
+    env_file:
+        - .env_production
+
+  celery:
+    env_file:
+        - .env_production
+
+  geonode:
+    env_file:
+        - .env_production
+
+  letsencrypt:
+    env_file:
+        - .env_production
