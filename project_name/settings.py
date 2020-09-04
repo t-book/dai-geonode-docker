@@ -29,7 +29,7 @@ except ImportError:
     from urlparse import urlparse, urlunparse
 # Load more settings from a file called local_settings.py if it exists
 try:
-    from dai_geonode.local_settings import *
+    from {{project_name}}.local_settings import *
 #    from geonode.local_settings import *
 except ImportError:
     from geonode.settings import *
@@ -37,13 +37,13 @@ except ImportError:
 #
 # General Django development settings
 #
-PROJECT_NAME = 'dai_geonode'
+PROJECT_NAME = '{{project_name}}'
 
 # add trailing slash to site url. geoserver url will be relative to this
 if not SITEURL.endswith('/'):
     SITEURL = '{}/'.format(SITEURL)
 
-SITENAME = os.getenv("SITENAME", 'dai_geonode')
+SITENAME = os.getenv("SITENAME", '{{project_name}}')
 
 # Defines the directory that contains the settings file as the LOCAL_ROOT
 # It is used for relative settings elsewhere.

@@ -23,9 +23,9 @@ import os
 __version__ = (3, 0, 0, 'final', 0)
 
 
-default_app_config = "dai_geonode.apps.AppConfig"
+default_app_config = "{{project_name}}.apps.AppConfig"
 
 
 def get_version():
-    import dai_geonode.version
-    return dai_geonode.version.get_version(__version__)
+    import {{project_name}}.version
+    return {{project_name}}.version.get_version(__version__)

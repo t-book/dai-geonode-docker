@@ -51,9 +51,9 @@ from paver.easy import (
 from setuptools.command import easy_install
 
 try:
-    from dai_geonode.local_settings import *
+    from {{project_name}}.local_settings import *
 except ImportError:
-    from dai_geonode.settings import *
+    from {{project_name}}.settings import *
 
 try:
     from paver.path import pushd
@@ -1012,8 +1012,8 @@ def _reset():
         path=os.path.join(settings.PROJECT_ROOT, 'development.db')
     )
     )
-    sh("rm -rf dai_geonode/development.db")
-    sh("rm -rf dai_geonode/uploaded/*")
+    sh("rm -rf {{project_name}}/development.db")
+    sh("rm -rf {{project_name}}/uploaded/*")
     _install_data_dir()
 
 

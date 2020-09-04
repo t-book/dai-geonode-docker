@@ -29,8 +29,8 @@ def run_setup_hooks(*args, **kwargs):
 
 class AppConfig(BaseAppConfig):
 
-    name = "dai_geonode"
-    label = "dai_geonode"
+    name = "{{project_name}}"
+    label = "{{project_name}}"
 
     def ready(self):
         super(AppConfig, self).ready()

@@ -1,8 +1,8 @@
 {
-  "name": "dai_geonode",
+  "name": "{{project_name}}",
   "version": "0.0.1",
   "author": "GeoNode Developers",
-  "description": "Static code and assets for dai_geonode",
+  "description": "Static code and assets for {{project_name}}",
   "contributors": [
     {
     }
