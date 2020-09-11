@@ -43,7 +43,7 @@ else
         if [ ${IS_FIRST_START} = "true" ] || [ ${IS_FIRST_START} = "True" ] || [ ${FORCE_REINIT} = "true" ]  || [ ${FORCE_REINIT} = "True" ] || [ ! -e "/mnt/volumes/statics/geonode_init.lock" ]; then
             /usr/local/bin/invoke updategeoip >> /usr/src/{{project_name}}/invoke.log
             echo "updategeoip task done"
-            /usr/local/bin/invoke fixtures >> /usr/src/{{project_name}}/invoke.log
+            #/usr/local/bin/invoke fixtures >> /usr/src/{{project_name}}/invoke.log
             echo "fixture task done"
             /usr/local/bin/invoke monitoringfixture >> /usr/src/{{project_name}}/invoke.log
             echo "monitoringfixture task done"
@@ -58,7 +58,7 @@ else
         echo "waitforgeoserver task done"
         /usr/local/bin/invoke geoserverfixture >> /usr/src/{{project_name}}/invoke.log
         echo "geoserverfixture task done"
-        /usr/local/bin/invoke updateadmin >> /usr/src/{{project_name}}/invoke.log
+        #/usr/local/bin/invoke updateadmin >> /usr/src/{{project_name}}/invoke.log
         echo "updateadmin task done"
 
         cmd=$UWSGI_CMD
