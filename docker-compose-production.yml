@@ -4,6 +4,8 @@ services:
   db:
     env_file:
         - .env_production
+    ports:
+        - "5432:5432"
 
   geoserver:
     env_file:
