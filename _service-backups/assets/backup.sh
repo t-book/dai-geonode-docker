@@ -46,13 +46,13 @@ set_variables(){
 
 	# Server to Backup
 	# this is read from env variables
-	# BACKUP_HOST="virginiaplain07.klassarchaeologie.uni-koeln.de"
-	# BACKUP_USER=csgis
+	# BACKUP_HOST=
+	# BACKUP_USER=
 
 	# Mount point of backup share's mount point and folder therein,
 	# with write access on remote backup server machine.
 	# this is read from env variables
-	# BACKUP_MOUNT="/home/csgis/daicloud02"
+	# BACKUP_MOUNT=
 
 	# Folder that exists within mount point's tree (relative path)
 	# and will contain the backup data. BACKUP_USER must have
