@@ -46,9 +46,9 @@ final_message(){
 	MSG="Ended backup $( date '+%d-%m-%y %H:%M' ) on $SITEURL"
 	printHeader "$MSG"
 	if [ $SEND_SLACK =  true ]; then
-		sendSlack '$MSG'
+		sendSlack "$MSG"
 	fi
-	if [ $SEND_MAIL =  true]; then
+	if [ $SEND_MAIL =  true ]; then
 		(echo "Subject: ${MSG}"; echo "From: ${DJANGO_EMAIL_HOST_USER}"; echo "To: ${REPORTS_TO}"; echo ""; echo "${MSG}") | /usr/sbin/ssmtp ${REPORTS_TO}
 	fi
 }
@@ -56,9 +56,6 @@ final_message(){
 # Success Message
 printSuccess(){
 	echo -e ${PALETTE_GREEN}"SUCCESS: $1\n"${PALETTE_RESET}
-	if [ $SEND_SLACK =  true ]; then
-		sendSlack 'SUCCESS: $1'
-	fi
 }
 
 # Test if Backup Drive is mounted

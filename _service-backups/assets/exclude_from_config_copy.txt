@@ -1,0 +1,13 @@
+# rsync ignore pattern
+*.shp
+*.qix
+*.shx
+*.dbf
+*.prj
+*.sld
+*.war
+*.tif
+*.tiff*.pdf
+*.jpg
+*.geotiff
+*.GEOTIFF

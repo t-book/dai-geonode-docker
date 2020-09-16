@@ -8,9 +8,10 @@
 # Tested on: Alpine Linux
 ###########################################################
 
-DRY_RUN=true
-SEND_MAIL=false
-SEND_SLACK=true
+# this is read from env variables
+# DRY_RUN=false
+# SEND_MAIL=true
+# SEND_SLACK=true
 
 ############################
 # I. Variables             #
@@ -26,37 +27,42 @@ set_variables(){
 
 	# Main backup dir with date
 	BPTH=/backups/backup_${NOW}
-	mkdir -p "${BPTH}"
 
 	# Dir for backups
 	DPTH=${BPTH}/databases
-	mkdir -p "${DPTH}"; mkdir -p "${DPTH}/full"; mkdir -p "${DPTH}/parts"
 
 	# Dir for Geoserver data
 	GPTH=${BPTH}/geoserver-data-dir
-	mkdir -p "${GPTH}"
 
-	# Logfile location
-	LOGFILE="${BPTH}/logfile.txt"
+  # Create backup directories
+	if [ $DRY_RUN = false ] ; then
+		mkdir -p "${BPTH}"
+		mkdir -p "${DPTH}"; mkdir -p "${DPTH}/full"; mkdir -p "${DPTH}/parts";
+		mkdir -p "${GPTH}"
+	fi
 
 	# Directories to backup
 	TO_BACKUP="/geonode_statics /geoserver-data-dir"
 
 	# Server to Backup
 	# this is read from env variables
-	# BACKUP_HOST="virginiaplain07.klassarchaeologie.uni-koeln.de"
-	# BACKUP_USER=csgis
+	# BACKUP_HOST=
+	# BACKUP_USER=
 
 	# Mount point of backup share's mount point and folder therein,
 	# with write access on remote backup server machine.
-	BACKUP_MOUNT="/home/csgis/daicloud02"
+	# this is read from env variables
+	# BACKUP_MOUNT=
 
 	# Folder that exists within mount point's tree (relative path)
 	# and will contain the backup data. BACKUP_USER must have
 	# write access to this and it must already exist!
-	BACKUP_FOLDER="dai-backup-datadumps/iDAI.geoserver/v3"
+	# BACKUP_FOLDER="dai-backup-datadumps/iDAI.geoserver/v3"
 	BACKUP_FOLDER_DB="$BACKUP_FOLDER/database_and_geoserver-config"
 	BACKUP_FOLDER_BIN="$BACKUP_FOLDER/binary_files"
+
+	# clear log
+	echo "" > /tmp/result
 }
 
 ############################
@@ -84,6 +90,7 @@ main(){
 	db_separated_table_backup
 	files_sync_geoserver_config_to_local_folder
 	db_restore_in_test_database
+	files_copy_logs_to_backup_folder
 	files_create_tar_from_local_folder
 	copy_tar_archive_to_remote_server
 	files_delete_old_backups
@@ -96,7 +103,7 @@ main(){
 db_data_with_schema_backup(){
 	for cur_db in $DBS; do
 		printHeader "db_data_with_schema_backup: Processing Full Backup of DB: ${cur_db}"
-		CMD="pg_dump -U postgres -h db -C -v -d ${cur_db} > ${DPTH}/full/${cur_db}.pgdump"
+		CMD="pg_dump -U postgres -h db -v -d ${cur_db} > ${DPTH}/full/${cur_db}.pgdump"
 		if [ $DRY_RUN = false ] ; then
 			if ! eval "$CMD"; then
 				stopBackup "Full database backup for $cur_db via pg_dump\n CMD: $CMD"
@@ -166,36 +173,36 @@ db_restore_in_test_database(){
 	for cur_db in $DBS; do
 		printHeader "db_restore_in_test_database: Processing Test Restore DB: ${cur_db}"
 
-		CMD_CREATE_DB="psql -U postgres -h db -d template1 -c  \"CREATE DATABASE {{project_name}}_restore_test WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8';\""
+		CMD_CREATE_DB="psql -U postgres -h db -c  \"CREATE DATABASE ${cur_db}_restore_test WITH TEMPLATE = template0 ENCODING='UTF8' LC_COLLATE='en_US.utf8' LC_CTYPE='en_US.utf8';\""
 		CMD_RESTORE="cat ${DPTH}/full/${cur_db}.pgdump | psql -U postgres -h db -d ${cur_db}_restore_test"
 		CMD_DROP="psql -U postgres -h db -c  \"DROP DATABASE IF EXISTS ${cur_db}_restore_test;\""
 
 		if [ $DRY_RUN = false ] ; then
 			# Restore files
 			if ! eval "$CMD_CREATE_DB"; then
-				stopBackup "Creation of ${cur_db}_restore_test\n CMD: $CMD"
+				stopBackup "Creation of ${cur_db}_restore_test\n CMD: $CMD_CREATE_DB"
 			else
-				printSuccess "Creation of ${cur_db}_restore_test\n CMD: $CMD"
+				printSuccess "Creation of ${cur_db}_restore_test\n CMD: $CMD_CREATE_DB"
 			fi
 
 			# Restore files
 			if ! eval "$CMD_RESTORE"; then
-				stopBackup "Restore for ${DPTH}/full/${cur_db}.pgdump in ${cur_db}_restore_test\n CMD: $CMD"
+				stopBackup "Restore for ${DPTH}/full/${cur_db}.pgdump in ${cur_db}_restore_test\n CMD: $CMD_RESTORE"
 			else
-				printSuccess "Restore for ${DPTH}/full/${cur_db}.pgdump in ${cur_db}_restore_test\n CMD: $CMD"
+				printSuccess "Restore for ${DPTH}/full/${cur_db}.pgdump in ${cur_db}_restore_test\n CMD: $CMD_RESTORE"
 			fi
 
 			# Drop Test Database
 			if ! eval "$CMD_DROP"; then
-				stopBackup "Drop of ${cur_db}_restore_test\n CMD: $CMD"
+				stopBackup "Drop of ${cur_db}_restore_test\n CMD: $CMD_DROP"
 			else
-				printSuccess "Drop of ${cur_db}_restore_test\n CMD: $CMD"
+				printSuccess "Drop of ${cur_db}_restore_test\n CMD: $CMD_DROP"
 			fi
 
 		else
-	     printf "$CMD_CREATE_DB"
-	     printf "$CMD_RESTORE"
-	     printf "$CMD_DROP"
+	     printf "$CMD_CREATE_DB\n"
+	     printf "$CMD_RESTORE\n"
+	     printf "$CMD_DROP\n"
 		fi
 	done
 
@@ -215,6 +222,19 @@ files_sync_geoserver_config_to_local_folder(){
 	fi
 }
 
+files_copy_logs_to_backup_folder(){
+	CMD="cp /tmp/result ${BPTH}/backup_log"
+	if [ $DRY_RUN = false ]; then
+		if ! eval "$CMD"; then
+			stopBackup "Copy Logfile\n CMD: $CMD"
+		else
+			printSuccess "Copy Logfile\n CMD: $CMD"
+		fi
+	else
+		printf "$CMD\n"
+	fi
+}
+
 files_create_tar_from_local_folder(){
 	printHeader "files_create_tar_from_local_folder: ${BPTH} to /backups/dai-geonode.tar_$NOW.bz2"
 	CMD="tar cvfj /backups/dai-geonode.tar_$NOW.bz2 ${BPTH}"
@@ -223,7 +243,6 @@ files_create_tar_from_local_folder(){
 			stopBackup "Tar error for dai-geonode.tar_$NOW.bz2\n CMD: $CMD"
 		else
 			printSuccess "Created dai-geonode.tar_$NOW.bz2\n CMD: $CMD"
-			#rm -R ${BPTH}
 		fi
 	else
 		printf "$CMD\n"
@@ -273,7 +292,6 @@ files_sync_binary_to_remote(){
 	done
 }
 
-
-
+# run
 main "$@" | tee /tmp/result
 
