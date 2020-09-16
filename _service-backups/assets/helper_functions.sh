@@ -2,7 +2,7 @@
 
 # helper for sending notifications to backup channel
 sendSlack () {
-	curl -g -X POST -H "Content-type: application/json" --data "{\"text\": \"$1\"}" https://hooks.slack.com/services/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
+	curl -g -X POST -H "Content-type: application/json" --data "{\"text\": \"$1\"}" ${SLACK_TOKEN}
 }
 
 # Helper function alert
