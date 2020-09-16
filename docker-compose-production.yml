@@ -26,3 +26,25 @@ services:
   letsencrypt:
     env_file:
         - .env_production
+
+  backup_service:
+    container_name: geonode_backup-service
+    #image: tbook/geonode_backup_service:2.10.3
+    build: ./_service-backups/
+
+    links:
+     - "db"
+    volumes:
+      - ./backups:/backups/
+      - statics:/geonode_statics/
+      - geoserver-data-dir:/geoserver-data-dir/
+      - ~/.ssh:/root/.ssh
+    restart: on-failure
+    env_file:
+      - .env_production
+    environment:
+      - DAYS_TO_KEEP=21
+      - DATABASE=${GEONODE_DATABASE}
+      - DATABASE_GEO=${GEONODE_GEODATABASE}
+      - HOSTNAME=dainst.de
+
