@@ -1,0 +1,3 @@
+User "{{from_user}}" ({{from_user.email}}) has requested access to the site.
+You can enable access by setting the user as active on the admin section
+http://{{current_site}}/admin/people/profile/{{from_user.id}}

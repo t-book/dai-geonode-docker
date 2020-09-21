@@ -1,0 +1,6 @@
+Your account ({{ username }}) has been approved and is now active.
+You can use the login form at https://{{ current_site.name }}.
+Please note that after your first login you need to verify your e-mail address.
+
+Learn more about how to publish data:
+https://docs.geonode.org/en/master/usage/index.html
