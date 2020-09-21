@@ -1,0 +1,7 @@
+
+User {{from_user}}
+{{from_user.first_name}} {{from_user.last_name}}
+({{from_user.email}}) 
+has requested access to the site. 
+
+You can enable access by setting the user as active on the admin section: https://{{SITEURL}}/admin/people/profile/{{from_user.id}}

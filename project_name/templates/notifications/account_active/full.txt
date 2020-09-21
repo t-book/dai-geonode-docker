@@ -1,0 +1,2 @@
+Your account has been approved and is now active.
+You can use the login form at https://{{ SITEURL }}
